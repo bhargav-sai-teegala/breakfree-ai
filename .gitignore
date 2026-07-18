@@ -45,3 +45,6 @@ CLAUDE.md
 PLAN.md
 AGENTS.md
 prisma/dev.db
+
+# Claude Code local context
+.claude/
