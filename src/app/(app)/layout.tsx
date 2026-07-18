@@ -10,7 +10,17 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (!user) redirect('/login')
+  if (!user) {
+    return (
+      <div className="flex h-screen items-center justify-center text-center p-4">
+        <div>
+          <h1 className="text-xl font-semibold mb-2">Session Syncing...</h1>
+          <p className="text-sm text-gray-500 mb-4">If you are stuck on this page, please refresh.</p>
+          <a href="/login" className="text-blue-500 hover:underline">Go to Login</a>
+        </div>
+      </div>
+    )
+  }
 
   const userName = (user.user_metadata?.name as string) || user.email?.split('@')[0] || 'there'
   const userEmail = user.email || ''
