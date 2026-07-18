@@ -11,7 +11,7 @@ const WELCOME_MESSAGE: CoachMessage = {
   id: 'welcome',
   user_id: '',
   role: 'model',
-  content: "Hi! I'm your BreakFree AI coach. I'm here to support you on your journey — whether you need encouragement, help with a craving, or just someone to talk to. What's on your mind today?",
+  content: "I'm Aura. I'm here to support you — whether you need encouragement, help with a craving, or just someone to talk to. What's on your mind today?",
   habit_id: null,
   type: 'chat',
   created_at: new Date().toISOString(),
@@ -20,9 +20,10 @@ const WELCOME_MESSAGE: CoachMessage = {
 interface ChatInterfaceProps {
   initialMessages: CoachMessage[]
   habitId: string | null
+  isPopup?: boolean
 }
 
-export function ChatInterface({ initialMessages, habitId }: ChatInterfaceProps) {
+export function ChatInterface({ initialMessages, habitId, isPopup }: ChatInterfaceProps) {
   const [messages, setMessages] = useState<CoachMessage[]>(
     initialMessages.length > 0 ? initialMessages : [WELCOME_MESSAGE],
   )

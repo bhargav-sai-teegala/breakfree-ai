@@ -35,8 +35,8 @@ export function MessageBubble({ message, isStreaming = false }: MessageBubblePro
         className={cn(
           'max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-lg',
           isUser
-            ? 'rounded-br-sm bg-white text-black font-medium'
-            : 'rounded-bl-sm text-white glass-card',
+            ? 'rounded-br-sm bg-gradient-to-br from-white to-gray-200 text-black font-semibold'
+            : 'rounded-bl-sm text-white/90 bg-[#1a1a1a]/80 border border-white/5 backdrop-blur-sm',
         )}
       >
         {message.content.split('\n').map((line, i) => (

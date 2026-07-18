@@ -5,12 +5,12 @@ import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { logoutAction } from '@/app/actions/auth'
 import { useTransition } from 'react'
+import { Logo } from '@/components/shared/Logo'
 
 const navItems = [
   { href: '/dashboard', label: 'Overview' },
   { href: '/habits', label: 'Habits' },
-  { href: '/urge', label: 'Emergency Help' },
-  { href: '/coach', label: 'AI Coach' },
+  { href: '/urge', label: 'Crisis Mode' },
   { href: '/insights', label: 'Insights' },
   { href: '/profile', label: 'Profile' },
 ]
@@ -37,7 +37,8 @@ export function Sidebar({ userName, userEmail }: SidebarProps) {
     >
       {/* Brand */}
       <div className="px-6 py-8">
-        <Link href="/dashboard" className="inline-flex items-center">
+        <Link href="/dashboard" className="inline-flex items-center gap-3">
+          <Logo size={24} className="text-white" />
           <span className="text-xl font-semibold tracking-tight text-white/90">
             BreakFree
           </span>
@@ -45,25 +46,22 @@ export function Sidebar({ userName, userEmail }: SidebarProps) {
       </div>
 
       {/* Nav links */}
-      <nav className="flex-1 px-3 py-4 flex flex-col gap-1 overflow-y-auto" aria-label="Main navigation">
-        {navItems.map(({ href, label }) => {
-          const isActive = pathname === href || (href !== '/dashboard' && pathname.startsWith(href))
+      <nav className="flex-1 px-4 py-6 space-y-1" aria-label="Sidebar navigation">
+        {navItems.map(item => {
+          const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href!))
           return (
             <Link
-              key={href}
-              href={href}
+              key={item.href}
+              href={item.href!}
               aria-current={isActive ? 'page' : undefined}
               className={cn(
-                'relative flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-200',
+                'flex items-center px-4 py-3 text-sm font-medium transition-all rounded-xl',
                 isActive
-                  ? 'bg-white/10 text-white font-medium'
-                  : 'text-white/60 hover:text-white/90 hover:bg-white/5',
+                  ? 'bg-white text-black font-semibold shadow-lg'
+                  : 'text-white/60 hover:text-white hover:bg-white/5',
               )}
             >
-              <span>{label}</span>
-              {href === '/urge' && (
-                <span className="h-1.5 w-1.5 rounded-full bg-white/40" aria-hidden="true" />
-              )}
+              {item.label}
             </Link>
           )
         })}

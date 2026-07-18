@@ -41,7 +41,7 @@ export function ChatInput({ onSend, disabled = false }: ChatInputProps) {
   const canSend = value.trim().length > 0 && !disabled
 
   return (
-    <div className="flex items-end gap-2">
+    <div className="flex items-end gap-2 px-1 pb-1">
       <textarea
         ref={textareaRef}
         value={value}
@@ -49,14 +49,14 @@ export function ChatInput({ onSend, disabled = false }: ChatInputProps) {
         onKeyDown={handleKeyDown}
         disabled={disabled}
         rows={1}
-        placeholder="Message your coach… (Enter to send, Shift+Enter for newline)"
+        placeholder="Message Aura..."
         aria-label="Message your AI coach"
         className={cn(
-          'flex-1 resize-none rounded-xl px-4 py-3 text-sm',
-          'bg-[var(--color-bg-elevated)] border border-[var(--color-border)]',
-          'text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]',
-          'focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent',
-          'transition-colors max-h-40 overflow-y-auto',
+          'flex-1 resize-none rounded-2xl px-4 py-3 text-sm leading-relaxed',
+          'bg-white/5 border border-white/10 shadow-inner backdrop-blur-md',
+          'text-white placeholder:text-white/40',
+          'focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/20 focus:bg-white/10',
+          'transition-all max-h-32 overflow-y-auto',
           'disabled:opacity-50 disabled:cursor-not-allowed',
         )}
       />
@@ -65,13 +65,13 @@ export function ChatInput({ onSend, disabled = false }: ChatInputProps) {
         disabled={!canSend}
         aria-label="Send message"
         className={cn(
-          'w-10 h-10 rounded-xl flex items-center justify-center transition-all shrink-0',
+          'w-11 h-11 rounded-2xl flex items-center justify-center transition-all shrink-0 border shadow-lg',
           canSend
-            ? 'bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)] active:scale-95'
-            : 'bg-[var(--color-bg-elevated)] text-[var(--color-text-muted)] cursor-not-allowed',
+            ? 'bg-white text-black border-transparent hover:scale-105 active:scale-95'
+            : 'bg-white/5 text-white/30 border-white/5 cursor-not-allowed',
         )}
       >
-        <Send className="h-4 w-4" aria-hidden="true" />
+        <Send className="h-4 w-4 ml-0.5" aria-hidden="true" />
       </button>
     </div>
   )

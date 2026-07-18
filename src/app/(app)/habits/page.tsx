@@ -53,7 +53,7 @@ export default async function HabitsPage() {
         <Link
           href="/habits/new"
           aria-label="Add new habit"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--color-primary)] text-white text-sm font-medium hover:bg-[var(--color-primary-hover)] transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black text-sm font-bold hover:bg-zinc-200 transition-colors"
         >
           <Plus className="h-4 w-4" aria-hidden="true" />
           Add habit
