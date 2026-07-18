@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   title: 'Dashboard — BreakFree AI',
 }
 
+// Revalidate every 60s so nudges refresh without full re-build
+export const revalidate = 60
+
 export default async function DashboardPage() {
   const supabase = await createClient()
   const {
@@ -30,7 +33,7 @@ export default async function DashboardPage() {
   // Fetch active habits
   const { data: habits } = await supabase
     .from('habits')
-    .select('*')
+    .select('id, name, category, motivation, target_type, target_value, unit, created_at')
     .eq('user_id', user.id)
     .is('archived_at', null)
     .order('created_at', { ascending: false })
@@ -63,29 +66,31 @@ export default async function DashboardPage() {
 
   const primaryHabit = habits[0]
 
-  // Fetch recent logs for primary habit
-  const { data: recentLogs } = await supabase
-    .from('habit_logs')
-    .select('*')
-    .eq('habit_id', primaryHabit.id)
-    .eq('user_id', user.id)
-    .order('date', { ascending: false })
-    .limit(30)
+  // Fetch logs and today's nudge in parallel — eliminates waterfall
+  const [{ data: recentLogs }, { data: nudge }] = await Promise.all([
+    supabase
+      .from('habit_logs')
+      .select('id, date, did_succeed, urge_level, triggers, mood, note')
+      .eq('habit_id', primaryHabit.id)
+      .eq('user_id', user.id)
+      .order('date', { ascending: false })
+      .limit(30),
+    supabase
+      .from('nudges')
+      .select('id, content, type, date')
+      .eq('habit_id', primaryHabit.id)
+      .eq('user_id', user.id)
+      .eq('date', today)
+      .single(),
+  ])
 
   const logs = recentLogs || []
   const { current: currentStreak, longest: longestStreak } = calculateStreak(logs)
-  const todayLog = logs.find(l => l.date === today) || null
+  const todayLog = logs.find(l => l.date === today) ?? null
 
-  // Fetch today's nudge — auto-generate if none exists
-  let { data: nudge } = await supabase
-    .from('nudges')
-    .select('*')
-    .eq('habit_id', primaryHabit.id)
-    .eq('user_id', user.id)
-    .eq('date', today)
-    .single()
-
-  if (!nudge) {
+  // Auto-generate nudge if none exists for today
+  let todayNudge = nudge
+  if (!todayNudge) {
     try {
       const nudgeType: NudgeType =
         currentStreak >= 30 ? 'milestone_celebration' :
@@ -99,10 +104,10 @@ export default async function DashboardPage() {
       const { data: newNudge } = await supabase
         .from('nudges')
         .upsert({ habit_id: primaryHabit.id, user_id: user.id, content, type: nudgeType, date: today }, { onConflict: 'habit_id,date' })
-        .select()
+        .select('id, content, type, date')
         .single()
 
-      nudge = newNudge
+      todayNudge = newNudge
     } catch { /* nudge generation fails gracefully */ }
   }
 
@@ -146,7 +151,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* AI Nudge */}
-      {nudge && <DailyNudge nudge={nudge.content} nudgeType={nudge.type} />}
+      {todayNudge && <DailyNudge nudge={todayNudge.content} nudgeType={todayNudge.type} />}
 
       {/* Quick check-in */}
       <QuickCheckIn habit={primaryHabit} todayLog={todayLog} today={today} />

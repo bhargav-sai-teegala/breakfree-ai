@@ -7,7 +7,7 @@ interface ChatMessage {
   content: string
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<Response> {
   try {
     const supabase = await createClient()
     const {

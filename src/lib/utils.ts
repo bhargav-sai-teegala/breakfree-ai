@@ -22,29 +22,33 @@ export function getTodayString(): string {
 
 /**
  * Calculates the current and longest continuous streak of successful habit logs.
- * 
+ *
  * @param logs - Array of habit logs containing success status and date.
  * @returns An object containing the current streak and longest streak counts.
  */
 export function calculateStreak(logs: HabitLog[]): { current: number; longest: number } {
   if (!logs.length) return { current: 0, longest: 0 }
+
   const sorted = [...logs].sort((a, b) => a.date.localeCompare(b.date))
   let current = 0
   let longest = 0
   let streak = 0
+
   for (let i = sorted.length - 1; i >= 0; i--) {
-    if (sorted[i].did_succeed) {
+    const isConsec = i === sorted.length - 1 || isConsecutive(sorted[i].date, sorted[i + 1]?.date)
+    if (sorted[i].did_succeed && isConsec) {
       streak++
-      if (i === sorted.length - 1 || isConsecutive(sorted[i].date, sorted[i + 1]?.date)) {
-        current = streak
-      }
+      if (i === sorted.length - 1 || current > 0) current = streak
     } else {
       if (streak > longest) longest = streak
-      streak = 0
+      streak = sorted[i].did_succeed ? 1 : 0
+      if (!sorted[i].did_succeed) current = 0
     }
   }
   if (streak > longest) longest = streak
-  return { current: current || (sorted[sorted.length - 1].did_succeed ? streak : 0), longest }
+
+  const lastLog = sorted[sorted.length - 1]
+  return { current: lastLog.did_succeed ? current || streak : 0, longest }
 }
 
 function isConsecutive(date1: string, date2: string | undefined): boolean {
@@ -57,33 +61,33 @@ function isConsecutive(date1: string, date2: string | undefined): boolean {
 
 /**
  * Calculates the success rate percentage over a given number of recent days.
- * 
+ *
  * @param logs - Array of habit logs.
  * @param days - Number of recent days to calculate the rate for (default: 30).
  * @returns The success rate percentage as a number between 0 and 100.
  */
 export function getSuccessRate(logs: HabitLog[], days: number = 30): number {
   if (!logs.length) return 0
-  const cutoff = new Date()
-  cutoff.setDate(cutoff.getDate() - days)
-  const recent = logs.filter(l => new Date(l.date) >= cutoff)
+  // Compute cutoff once, outside filter, to avoid repeated Date allocation
+  const cutoffTime = Date.now() - days * 24 * 60 * 60 * 1000
+  const recent = logs.filter(l => new Date(l.date).getTime() >= cutoffTime)
   if (!recent.length) return 0
   return Math.round((recent.filter(l => l.did_succeed).length / recent.length) * 100)
 }
 
 /**
  * Extracts and aggregates the most frequent triggers from the habit logs.
- * 
+ *
  * @param logs - Array of habit logs containing trigger arrays.
  * @returns An array of trigger objects containing the trigger name and its frequency count, sorted descending.
  */
 export function getTopTriggers(logs: HabitLog[]): { trigger: string; count: number }[] {
-  const counts: Record<string, number> = {}
-  logs.forEach(log => {
-    ;(log.triggers || []).forEach(t => {
-      counts[t] = (counts[t] || 0) + 1
-    })
-  })
+  const counts = logs.reduce<Record<string, number>>((acc, log) => {
+    for (const t of log.triggers ?? []) {
+      acc[t] = (acc[t] ?? 0) + 1
+    }
+    return acc
+  }, {})
   return Object.entries(counts)
     .map(([trigger, count]) => ({ trigger, count }))
     .sort((a, b) => b.count - a.count)

@@ -19,7 +19,7 @@ const FALLBACK_INSIGHTS: InsightData = {
   encouragement: 'Every day you log brings you closer to understanding yourself better.',
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<Response> {
   try {
     const supabase = await createClient()
     const {
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     // Fetch active habits
     const query = supabase
       .from('habits')
-      .select('*')
+      .select('id, name, category, motivation, target_type, target_value, unit')
       .eq('user_id', user.id)
       .is('archived_at', null)
 
@@ -47,12 +47,12 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(FALLBACK_INSIGHTS)
     }
 
-    // Fetch logs for each habit
+    // Fetch logs for each habit in parallel
     const habitsWithStats: HabitWithStats[] = await Promise.all(
       habits.map(async habit => {
         const { data: logs } = await supabase
           .from('habit_logs')
-          .select('*')
+          .select('id, date, did_succeed, urge_level, triggers, mood')
           .eq('habit_id', habit.id)
           .eq('user_id', user.id)
           .order('date', { ascending: false })

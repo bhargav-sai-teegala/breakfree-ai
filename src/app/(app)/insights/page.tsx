@@ -16,6 +16,8 @@ export const metadata: Metadata = {
   title: 'Insights — BreakFree AI',
 }
 
+export const revalidate = 60
+
 export default async function InsightsPage() {
   const supabase = await createClient()
   const {
@@ -25,7 +27,7 @@ export default async function InsightsPage() {
 
   const { data: habits } = await supabase
     .from('habits')
-    .select('*')
+    .select('id, name, category')
     .eq('user_id', user.id)
     .is('archived_at', null)
     .order('created_at', { ascending: false })
@@ -53,19 +55,21 @@ export default async function InsightsPage() {
 
   const primaryHabit = habits[0]
 
-  const { data: logs } = await supabase
-    .from('habit_logs')
-    .select('*')
-    .eq('habit_id', primaryHabit.id)
-    .eq('user_id', user.id)
-    .order('date', { ascending: false })
-    .limit(90)
-
-  const { data: milestones } = await supabase
-    .from('milestones')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('achieved_at', { ascending: false })
+  // Fetch logs and milestones in parallel — eliminates waterfall
+  const [{ data: logs }, { data: milestones }] = await Promise.all([
+    supabase
+      .from('habit_logs')
+      .select('id, date, did_succeed, urge_level, triggers, mood')
+      .eq('habit_id', primaryHabit.id)
+      .eq('user_id', user.id)
+      .order('date', { ascending: false })
+      .limit(90),
+    supabase
+      .from('milestones')
+      .select('id, days, message, achieved_at')
+      .eq('user_id', user.id)
+      .order('achieved_at', { ascending: false }),
+  ])
 
   const allLogs = logs || []
   const { current: currentStreak, longest: longestStreak } = calculateStreak(allLogs)
