@@ -48,15 +48,14 @@ export default async function DashboardPage() {
           <p className="text-[var(--color-text-secondary)] mt-1">Ready to break free?</p>
         </div>
         <EmptyState
-          emoji="⚡"
           title="Let's start your journey"
           description="Add your first habit to break and get personalized AI support."
           action={
             <Link
               href="/habits/new"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[var(--color-primary)] text-white font-medium hover:bg-[var(--color-primary-hover)] transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-white text-black text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.2)]"
             >
-              Add your first habit
+              ADD YOUR FIRST HABIT
             </Link>
           }
         />

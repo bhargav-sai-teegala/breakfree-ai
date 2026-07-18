@@ -2,18 +2,17 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Flame, Zap, MessageSquare, BarChart3, User, LogOut } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { logoutAction } from '@/app/actions/auth'
 import { useTransition } from 'react'
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/habits', label: 'My Habits', icon: Flame },
-  { href: '/urge', label: 'Urge Help', icon: Zap },
-  { href: '/coach', label: 'AI Coach', icon: MessageSquare },
-  { href: '/insights', label: 'Insights', icon: BarChart3 },
-  { href: '/profile', label: 'Profile', icon: User },
+  { href: '/dashboard', label: 'Overview' },
+  { href: '/habits', label: 'Habits' },
+  { href: '/urge', label: 'Emergency Help' },
+  { href: '/coach', label: 'AI Coach' },
+  { href: '/insights', label: 'Insights' },
+  { href: '/profile', label: 'Profile' },
 ]
 
 interface SidebarProps {
@@ -33,25 +32,21 @@ export function Sidebar({ userName, userEmail }: SidebarProps) {
 
   return (
     <aside
-      className="hidden md:flex flex-col w-64 shrink-0 border-r border-[var(--color-border)] h-screen"
-      style={{ backgroundColor: 'var(--color-bg-surface)' }}
+      className="hidden md:flex flex-col w-64 shrink-0 h-screen bg-[#0a0a0a] border-r border-white/5"
       aria-label="Sidebar navigation"
     >
       {/* Brand */}
-      <div className="px-6 py-5 border-b border-[var(--color-border)]">
-        <Link href="/dashboard" className="inline-flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-lg bg-[var(--color-primary)] flex items-center justify-center shadow group-hover:scale-105 transition-transform">
-            <span className="text-sm" aria-hidden="true">⚡</span>
-          </div>
-          <span className="text-lg font-bold text-[var(--color-text-primary)]">
-            Break<span className="text-[var(--color-primary)]">Free</span>
+      <div className="px-6 py-8">
+        <Link href="/dashboard" className="inline-flex items-center">
+          <span className="text-xl font-semibold tracking-tight text-white/90">
+            BreakFree
           </span>
         </Link>
       </div>
 
       {/* Nav links */}
-      <nav className="flex-1 px-3 py-4 flex flex-col gap-1" aria-label="Main navigation">
-        {navItems.map(({ href, label, icon: Icon }) => {
+      <nav className="flex-1 px-3 py-4 flex flex-col gap-1 overflow-y-auto" aria-label="Main navigation">
+        {navItems.map(({ href, label }) => {
           const isActive = pathname === href || (href !== '/dashboard' && pathname.startsWith(href))
           return (
             <Link
@@ -59,16 +54,15 @@ export function Sidebar({ userName, userEmail }: SidebarProps) {
               href={href}
               aria-current={isActive ? 'page' : undefined}
               className={cn(
-                'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150',
+                'relative flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-200',
                 isActive
-                  ? 'bg-[var(--color-primary)] text-white shadow-lg shadow-purple-900/40'
-                  : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-elevated)] hover:text-[var(--color-text-primary)]',
+                  ? 'bg-white/10 text-white font-medium'
+                  : 'text-white/60 hover:text-white/90 hover:bg-white/5',
               )}
             >
-              <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
-              {label}
+              <span>{label}</span>
               {href === '/urge' && (
-                <span className="ml-auto flex h-2 w-2 rounded-full bg-[var(--color-danger)]" aria-hidden="true" />
+                <span className="h-1.5 w-1.5 rounded-full bg-white/40" aria-hidden="true" />
               )}
             </Link>
           )
@@ -76,32 +70,22 @@ export function Sidebar({ userName, userEmail }: SidebarProps) {
       </nav>
 
       {/* User info + logout */}
-      <div className="px-3 py-4 border-t border-[var(--color-border)]">
-        <div className="flex items-center gap-3 px-3 py-2 mb-2">
-          <div
-            className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold"
-            style={{ backgroundColor: 'var(--color-primary)', color: 'white' }}
-            aria-hidden="true"
-          >
-            {userName.charAt(0).toUpperCase()}
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-[var(--color-text-primary)] truncate">{userName}</p>
-            <p className="text-xs text-[var(--color-text-muted)] truncate">{userEmail}</p>
-          </div>
+      <div className="p-4">
+        <div className="flex flex-col gap-0.5 px-3 mb-4">
+          <p className="text-sm font-medium text-white/90 truncate">{userName}</p>
+          <p className="text-xs text-white/50 truncate">{userEmail}</p>
         </div>
         <button
           onClick={handleLogout}
           disabled={isPending}
           aria-label="Sign out"
           className={cn(
-            'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150',
-            'text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-elevated)] hover:text-[var(--color-danger)]',
+            'w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-150',
+            'text-white/60 hover:text-white/90 hover:bg-white/5',
             'disabled:opacity-50 disabled:cursor-not-allowed',
           )}
         >
-          <LogOut className="h-4 w-4" aria-hidden="true" />
-          {isPending ? 'Signing out…' : 'Sign out'}
+          {isPending ? 'Signing out...' : 'Sign out'}
         </button>
       </div>
     </aside>

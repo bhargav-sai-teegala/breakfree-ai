@@ -23,16 +23,14 @@ export function BreathingExercise() {
 
     const interval = setInterval(() => {
       setCountdown(prev => {
-        if (prev <= 1) {
-          setPhaseIdx(pi => {
-            const next = (pi + 1) % PHASES.length
-            if (next === 0) setCycles(c => c + 1)
-            setCountdown(PHASES[next].duration)
-            return next
-          })
-          return PHASES[(phaseIdx + 1) % PHASES.length].duration
-        }
-        return prev - 1
+        if (prev > 1) return prev - 1
+
+        setPhaseIdx(pi => {
+          const next = (pi + 1) % PHASES.length
+          if (next === 0) setCycles(c => c + 1)
+          return next
+        })
+        return PHASES[(phaseIdx + 1) % PHASES.length].duration
       })
     }, 1000)
 
@@ -40,7 +38,11 @@ export function BreathingExercise() {
   }, [active, phaseIdx])
 
   const currentPhase = PHASES[phaseIdx]
-  const scale = currentPhase.phase === 'inhale' ? 1.4 : currentPhase.phase === 'exhale' ? 0.7 : 1
+  
+  // Hold phase should maintain the inhaled size, Rest phase should maintain the exhaled size
+  const scale = 
+    (currentPhase.phase === 'inhale' || currentPhase.phase === 'hold') ? 1.4 :
+    (currentPhase.phase === 'exhale' || currentPhase.phase === 'rest') ? 0.7 : 1
 
   return (
     <div className="flex flex-col items-center gap-8 py-4">

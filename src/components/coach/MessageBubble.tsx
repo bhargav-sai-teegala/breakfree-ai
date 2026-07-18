@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import type { CoachMessage } from '@/types'
 import { cn } from '@/lib/utils'
+import { Logo } from '@/components/shared/Logo'
 
 interface MessageBubbleProps {
   message: CoachMessage
@@ -22,27 +23,21 @@ export function MessageBubble({ message, isStreaming = false }: MessageBubblePro
       {/* Avatar */}
       {!isUser && (
         <div
-          className="w-7 h-7 rounded-full flex items-center justify-center text-xs shrink-0 mb-0.5"
-          style={{ backgroundColor: 'var(--color-primary)' }}
+          className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mb-0.5 bg-[#111] border border-[#333]"
           aria-hidden="true"
         >
-          ⚡
+          <Logo size={16} />
         </div>
       )}
 
       {/* Bubble */}
       <div
         className={cn(
-          'max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed',
+          'max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-lg',
           isUser
-            ? 'rounded-br-sm text-white'
-            : 'rounded-bl-sm text-[var(--color-text-primary)] glass-card',
+            ? 'rounded-br-sm bg-white text-black font-medium'
+            : 'rounded-bl-sm text-white glass-card',
         )}
-        style={
-          isUser
-            ? { backgroundColor: 'var(--color-primary)' }
-            : {}
-        }
       >
         {message.content.split('\n').map((line, i) => (
           <p key={i} className={i > 0 ? 'mt-2' : ''}>
@@ -51,7 +46,7 @@ export function MessageBubble({ message, isStreaming = false }: MessageBubblePro
         ))}
         {isStreaming && (
           <span
-            className="inline-block w-0.5 h-4 ml-0.5 bg-[var(--color-text-secondary)] animate-pulse align-middle"
+            className="inline-block w-1.5 h-4 ml-1 bg-white animate-pulse align-middle"
             aria-hidden="true"
           />
         )}

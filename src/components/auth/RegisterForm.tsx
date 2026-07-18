@@ -7,6 +7,7 @@ import { RegisterSchema, type RegisterInput } from '@/validations/auth'
 import { registerAction } from '@/app/actions/auth'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { OAuthButton } from '@/components/auth/OAuthButton'
 
 type ActionState = {
   success: boolean
@@ -84,6 +85,19 @@ export function RegisterForm() {
       >
         {isPending ? 'Creating account…' : 'Create account'}
       </Button>
+
+      <div className="relative my-2">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t border-[var(--color-border)]" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase tracking-widest">
+          <span className="bg-[var(--color-bg-base)] px-2 text-[var(--color-text-muted)] font-semibold">
+            Or continue with
+          </span>
+        </div>
+      </div>
+
+      <OAuthButton />
     </form>
   )
 }

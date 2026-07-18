@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg-base: #0a0a0f;
-  --color-bg-surface: #13131a;
-  --color-bg-elevated: #1c1c28;
-  --color-border: #2a2a3a;
-  --color-primary: #7c3aed;
-  --color-primary-hover: #6d28d9;
-  --color-accent: #10b981;
+  --color-bg-base: #000000;
+  --color-bg-surface: #0a0a0a;
+  --color-bg-elevated: #111111;
+  --color-border: #222222;
+  --color-primary: #ffffff;
+  --color-primary-hover: #e5e5e5;
+  --color-accent: #3b82f6;
   --color-warm: #f59e0b;
   --color-danger: #ef4444;
   --color-warning: #f97316;
-  --color-text-primary: #f9fafb;
-  --color-text-secondary: #9ca3af;
-  --color-text-muted: #4b5563;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #a1a1aa;
+  --color-text-muted: #52525b;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -28,18 +28,36 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Glass card */
+/* Glass card (Obsidian style) */
 .glass-card {
   background: var(--color-bg-surface);
   border: 1px solid var(--color-border);
-  border-radius: 1rem;
+  border-radius: 1.25rem;
   backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Urge button pulse */
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+  pointer-events: none;
+}
+
+.glass-card:hover {
+  border-color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5), 0 0 20px rgba(255,255,255,0.03);
+}
+
+/* Urge button pulse (Neon red) */
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.4), 0 0 40px rgba(239, 68, 68, 0.2); }
-  50% { box-shadow: 0 0 30px rgba(239, 68, 68, 0.7), 0 0 60px rgba(239, 68, 68, 0.4); }
+  0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.6), 0 0 40px rgba(239, 68, 68, 0.4); }
+  50% { box-shadow: 0 0 40px rgba(239, 68, 68, 0.9), 0 0 80px rgba(239, 68, 68, 0.6); }
 }
 
 .urge-pulse {

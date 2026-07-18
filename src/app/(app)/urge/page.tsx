@@ -59,18 +59,18 @@ export default function UrgePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="flex flex-col gap-6"
+            className="flex flex-col gap-8"
           >
             <div>
-              <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">
-                You&apos;ve got this. ⚡
+              <h1 className="text-3xl font-black text-white tracking-tight">
+                Emergency Intercept
               </h1>
-              <p className="text-[var(--color-text-secondary)] mt-1 text-sm">
-                Let&apos;s work through this urge together. Which habit are you struggling with?
+              <p className="text-zinc-400 mt-2 text-sm font-medium">
+                Let's work through this urge together. Which habit are you struggling with right now?
               </p>
             </div>
 
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-4">
               {habits.map(habit => (
                 <button
                   key={habit.id}
@@ -78,22 +78,25 @@ export default function UrgePage() {
                     setSelectedHabit(habit)
                     setStep('assess')
                   }}
-                  className="text-left glass-card p-4 hover:border-[var(--color-primary)] transition-colors active:scale-98"
+                  className="text-left glass-card p-6 flex flex-col gap-1 border-zinc-800 bg-[#111] hover:bg-[#1a1a1a] transition-all active:scale-95 group"
                   aria-label={`Get help with ${habit.name}`}
                 >
-                  <p className="font-medium text-[var(--color-text-primary)]">{habit.name}</p>
-                  <p className="text-xs text-[var(--color-text-muted)] mt-0.5">{habit.category}</p>
+                  <div className="flex items-center justify-between">
+                    <p className="font-bold text-lg text-white group-hover:text-white">{habit.name}</p>
+                    <span className="text-zinc-600 group-hover:text-white transition-colors">↗</span>
+                  </div>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500">{habit.category}</p>
                 </button>
               ))}
               {habits.length === 0 && (
-                <div className="glass-card p-6 text-center">
-                  <p className="text-[var(--color-text-secondary)]">No habits added yet.</p>
+                <div className="glass-card p-8 text-center border-zinc-800 bg-[#111]">
+                  <p className="text-zinc-500 font-medium">No active habits found.</p>
                 </div>
               )}
             </div>
 
-            <p className="text-xs text-center text-[var(--color-text-muted)]">
-              Urges typically pass in 5–20 minutes. You are stronger than this feeling.
+            <p className="text-[10px] uppercase tracking-widest font-bold text-center text-zinc-600">
+              Urges typically pass in 5–20 minutes. Ride the wave.
             </p>
           </motion.div>
         )}

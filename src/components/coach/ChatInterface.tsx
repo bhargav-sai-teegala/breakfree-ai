@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import type { CoachMessage } from '@/types'
 import { MessageBubble } from './MessageBubble'
 import { ChatInput } from './ChatInput'
+import { Logo } from '@/components/shared/Logo'
 
 const WELCOME_MESSAGE: CoachMessage = {
   id: 'welcome',
@@ -158,8 +159,8 @@ export function ChatInterface({ initialMessages, habitId }: ChatInterfaceProps) 
             animate={{ opacity: 1, y: 0 }}
             className="flex items-end gap-2"
           >
-            <div className="w-7 h-7 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-xs shrink-0">
-              ⚡
+            <div className="w-8 h-8 rounded-full bg-[#111] border border-[#333] flex items-center justify-center shrink-0">
+              <Logo size={16} />
             </div>
             <div className="glass-card px-4 py-3">
               <div className="flex gap-1.5 items-center">

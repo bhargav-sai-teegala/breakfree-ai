@@ -37,15 +37,14 @@ export default async function InsightsPage() {
       <div className="flex flex-col gap-6">
         <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">Insights</h1>
         <EmptyState
-          emoji="📊"
           title="No data yet"
           description="Add a habit and start logging to see your insights."
           action={
             <Link
               href="/habits/new"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[var(--color-primary)] text-white font-medium hover:bg-[var(--color-primary-hover)] transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-white text-black text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.2)]"
             >
-              Add first habit
+              ADD FIRST HABIT
             </Link>
           }
         />

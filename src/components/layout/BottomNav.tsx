@@ -2,15 +2,14 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Flame, Zap, MessageSquare, BarChart3 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navItems = [
-  { href: '/dashboard', label: 'Home', icon: LayoutDashboard },
-  { href: '/habits', label: 'Habits', icon: Flame },
-  { href: '/urge', label: 'HELP', icon: Zap, isUrge: true },
-  { href: '/coach', label: 'Coach', icon: MessageSquare },
-  { href: '/insights', label: 'Stats', icon: BarChart3 },
+  { href: '/dashboard', label: 'Overview' },
+  { href: '/habits', label: 'Habits' },
+  { href: '/urge', label: 'SOS', isUrge: true },
+  { href: '/coach', label: 'Coach' },
+  { href: '/insights', label: 'Stats' },
 ]
 
 export function BottomNav() {
@@ -18,11 +17,10 @@ export function BottomNav() {
 
   return (
     <nav
-      className="md:hidden fixed bottom-0 inset-x-0 z-40 border-t border-[var(--color-border)] flex items-center justify-around px-2 h-16 safe-area-inset-bottom"
-      style={{ backgroundColor: 'var(--color-bg-surface)' }}
+      className="md:hidden fixed bottom-0 inset-x-0 z-40 border-t border-white/5 flex items-center justify-around px-2 h-16 safe-area-inset-bottom bg-[#0a0a0a]/90 backdrop-blur-xl"
       aria-label="Mobile navigation"
     >
-      {navItems.map(({ href, label, icon: Icon, isUrge }) => {
+      {navItems.map(({ href, label, isUrge }) => {
         const isActive = pathname === href || (href !== '/dashboard' && pathname.startsWith(href))
         if (isUrge) {
           return (
@@ -30,18 +28,17 @@ export function BottomNav() {
               key={href}
               href={href}
               aria-label="Get urge help now"
-              className="-mt-6 flex flex-col items-center justify-center"
+              className="-mt-6 flex flex-col items-center justify-center group"
             >
               <div
                 className={cn(
-                  'w-14 h-14 rounded-full flex items-center justify-center shadow-2xl',
-                  'bg-[var(--color-danger)] urge-pulse',
+                  'w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-all duration-300',
+                  'bg-white/10 border border-white/20 group-hover:bg-white/20',
                   isActive && 'scale-95',
                 )}
               >
-                <Icon className="h-6 w-6 text-white" aria-hidden="true" />
+                <span className="text-white font-medium text-xs leading-none">SOS</span>
               </div>
-              <span className="text-[10px] mt-1 font-bold text-[var(--color-danger)]">{label}</span>
             </Link>
           )
         }
@@ -51,14 +48,13 @@ export function BottomNav() {
             href={href}
             aria-current={isActive ? 'page' : undefined}
             className={cn(
-              'flex flex-col items-center justify-center gap-1 w-12 py-1 rounded-lg transition-colors',
+              'flex flex-col items-center justify-center px-3 py-2 transition-all rounded-lg',
               isActive
-                ? 'text-[var(--color-primary)]'
-                : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]',
+                ? 'text-white bg-white/10'
+                : 'text-white/50 hover:text-white/80 hover:bg-white/5',
             )}
           >
-            <Icon className="h-5 w-5" aria-hidden="true" />
-            <span className="text-[10px] font-medium">{label}</span>
+            <span className="text-[11px] font-medium">{label}</span>
           </Link>
         )
       })}

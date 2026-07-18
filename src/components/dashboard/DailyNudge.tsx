@@ -1,4 +1,3 @@
-import { Sparkles, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
 interface DailyNudgeProps {
@@ -9,36 +8,29 @@ interface DailyNudgeProps {
 export function DailyNudge({ nudge, nudgeType }: DailyNudgeProps) {
   return (
     <div
-      className="glass-card p-5 relative overflow-hidden"
+      className="glass-card p-6 relative overflow-hidden flex flex-col justify-between h-full"
       style={{
-        background: 'linear-gradient(135deg, rgba(124,58,237,0.08) 0%, var(--color-bg-surface) 60%)',
-        borderColor: 'rgba(124,58,237,0.25)',
+        background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0.8) 100%)',
       }}
     >
-      <div
-        aria-hidden="true"
-        className="absolute -top-6 -right-6 w-20 h-20 rounded-full opacity-10"
-        style={{ background: 'radial-gradient(circle, var(--color-primary), transparent)' }}
-      />
+      <div className="relative z-10 flex flex-col h-full">
+        <p className="text-xs font-bold uppercase tracking-[0.15em] text-zinc-400 mb-4">
+          AI INSIGHT · {nudgeType.replace(/_/g, ' ')}
+        </p>
 
-      <div className="relative">
-        <div className="flex items-center gap-2 mb-3">
-          <Sparkles className="h-4 w-4 text-[var(--color-primary)]" aria-hidden="true" />
-          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-primary)]">
-            AI nudge — {nudgeType.replace(/_/g, ' ')}
-          </p>
+        <p className="text-sm text-white leading-relaxed flex-1">
+          {nudge}
+        </p>
+
+        <div className="mt-6 pt-4 border-t border-zinc-800">
+          <Link
+            href="/coach"
+            className="inline-block text-xs uppercase tracking-widest text-zinc-400 hover:text-white transition-colors font-semibold"
+            aria-label="Continue conversation with AI coach"
+          >
+            Open Chat Terminal ↗
+          </Link>
         </div>
-
-        <p className="text-sm text-[var(--color-text-primary)] leading-relaxed">{nudge}</p>
-
-        <Link
-          href="/coach"
-          className="inline-flex items-center gap-1.5 mt-3 text-xs text-[var(--color-primary)] hover:underline font-medium"
-          aria-label="Continue conversation with AI coach"
-        >
-          Talk to your coach
-          <ArrowRight className="h-3 w-3" aria-hidden="true" />
-        </Link>
       </div>
     </div>
   )

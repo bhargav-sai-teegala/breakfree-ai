@@ -1,5 +1,3 @@
-import { Heart } from 'lucide-react'
-
 interface WhyCardProps {
   motivation: string
   habitName: string
@@ -8,34 +6,26 @@ interface WhyCardProps {
 export function WhyCard({ motivation, habitName }: WhyCardProps) {
   return (
     <div
-      className="glass-card p-5 relative overflow-hidden"
+      className="glass-card p-6 relative overflow-hidden flex flex-col justify-between h-full"
       style={{
-        background: 'linear-gradient(135deg, rgba(245,158,11,0.08) 0%, var(--color-bg-surface) 60%)',
-        borderColor: 'rgba(245,158,11,0.25)',
+        background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0.8) 100%)',
       }}
     >
-      {/* Decorative glow */}
-      <div
-        aria-hidden="true"
-        className="absolute -top-8 -right-8 w-24 h-24 rounded-full opacity-10"
-        style={{ background: 'radial-gradient(circle, var(--color-warm), transparent)' }}
-      />
+      <div className="relative z-10 flex flex-col h-full">
+        <p className="text-xs font-bold uppercase tracking-[0.15em] text-zinc-400 mb-4">
+          Core Motivation
+        </p>
 
-      <div className="flex items-start gap-3 relative">
-        <div
-          className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
-          style={{ backgroundColor: 'rgba(245,158,11,0.15)' }}
-        >
-          <Heart className="h-4 w-4 text-[var(--color-warm)]" aria-hidden="true" />
+        <div className="flex-1 flex items-center">
+          <p className="text-lg text-white font-serif italic leading-relaxed border-l-2 border-white/20 pl-4 py-1">
+            "{motivation}"
+          </p>
         </div>
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-warm)] mb-1">
-            Why you started
+
+        <div className="mt-8 pt-4 border-t border-zinc-800">
+          <p className="text-xs text-zinc-500 uppercase tracking-widest">
+            Fueling: <span className="text-white font-semibold">{habitName}</span>
           </p>
-          <p className="text-sm text-[var(--color-text-primary)] leading-relaxed line-clamp-3">
-            &ldquo;{motivation}&rdquo;
-          </p>
-          <p className="text-xs text-[var(--color-text-muted)] mt-2">For: {habitName}</p>
         </div>
       </div>
     </div>

@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
-import { Sparkles, RefreshCw } from 'lucide-react'
 import type { Habit } from '@/types'
 import { LoadingSkeleton } from '@/components/shared/LoadingSkeleton'
 import { Button } from '@/components/ui/button'
@@ -54,61 +53,46 @@ export function DistractionList({ habit, triggers }: DistractionListProps) {
   }, [fetchSuggestion])
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="glass-card p-6 relative overflow-hidden" style={{ borderColor: 'rgba(124,58,237,0.3)' }}>
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse at top left, rgba(124,58,237,0.06) 0%, transparent 70%)' }}
-        />
-        <div className="flex items-start gap-3 relative">
-          <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-            style={{ backgroundColor: 'rgba(124,58,237,0.15)' }}
-          >
-            <Sparkles className="h-4 w-4 text-[var(--color-primary)]" aria-hidden="true" />
-          </div>
-          <div className="flex-1">
-            <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-primary)] mb-2">
-              Try this right now
-            </p>
-            {loading ? (
-              <LoadingSkeleton className="h-16 w-full" />
-            ) : (
-              <motion.p
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-sm text-[var(--color-text-primary)] leading-relaxed"
-              >
-                {suggestion}
-              </motion.p>
-            )}
-          </div>
+    <div className="flex flex-col gap-5">
+      <div className="glass-card p-6 relative overflow-hidden flex flex-col h-full bg-[#0a0a0a] border-zinc-800">
+        <p className="text-xs font-bold uppercase tracking-[0.15em] text-zinc-400 mb-4">
+          ACTIONABLE DISTRACTION
+        </p>
+        <div className="flex-1">
+          {loading ? (
+            <LoadingSkeleton className="h-16 w-full" />
+          ) : (
+            <motion.p
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-base text-white leading-relaxed font-medium"
+            >
+              {suggestion}
+            </motion.p>
+          )}
         </div>
       </div>
 
       <Button
         variant="secondary"
-        size="sm"
         onClick={() => fetchSuggestion(false)}
         disabled={loading}
         aria-label="Get another suggestion"
-        className="self-center"
+        className="w-full uppercase tracking-widest text-xs font-bold py-6 hover:bg-white hover:text-black border-zinc-800"
       >
-        <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} aria-hidden="true" />
-        Different idea
+        {loading ? 'GENERATING...' : 'REQUEST NEW IDEA'}
       </Button>
 
       {/* Remember your why */}
-      <div className="glass-card p-4" style={{ borderColor: 'rgba(245,158,11,0.2)' }}>
-        <p className="text-xs font-semibold text-[var(--color-warm)] mb-1">Remember your why</p>
-        <p className="text-sm text-[var(--color-text-secondary)] italic line-clamp-2">
+      <div className="p-4 border-l-2 border-white/20 mt-4">
+        <p className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2">Core Motivation</p>
+        <p className="text-base text-white italic font-serif leading-relaxed">
           &ldquo;{habit.motivation}&rdquo;
         </p>
       </div>
 
-      <p className="text-xs text-center text-[var(--color-text-muted)] px-4">
-        Urges peak and pass. Most last only 5–20 minutes. Ride the wave.
+      <p className="text-xs text-center text-zinc-600 px-4 font-semibold uppercase tracking-widest mt-4">
+        Urges peak and pass. Ride the wave.
       </p>
     </div>
   )

@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { CheckCircle2, XCircle, Loader2 } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import type { Habit, HabitLog } from '@/types'
 import { createLogAction } from '@/app/actions/habits'
 
@@ -41,12 +41,12 @@ export function QuickCheckIn({ habit, todayLog, today }: QuickCheckInProps) {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -12 }}
-          className="glass-card p-5"
+          className="glass-card p-6 border-zinc-800 bg-[#0a0a0a]"
         >
-          <h2 className="text-sm font-semibold text-[var(--color-text-primary)] mb-1">
-            Daily check-in
+          <h2 className="text-sm font-bold uppercase tracking-[0.1em] text-zinc-400 mb-2">
+            DAILY CHECK-IN
           </h2>
-          <p className="text-xs text-[var(--color-text-secondary)] mb-4">
+          <p className="text-base text-white mb-6">
             How did you do with &ldquo;{habit.name}&rdquo; today?
           </p>
           <div className="flex gap-3">
@@ -54,25 +54,33 @@ export function QuickCheckIn({ habit, todayLog, today }: QuickCheckInProps) {
               onClick={() => handleCheckIn(true)}
               disabled={isPending}
               aria-label="I resisted today"
-              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all active:scale-95 disabled:opacity-50"
-              style={{ backgroundColor: 'rgba(16,185,129,0.15)', color: 'var(--color-accent)', border: '1px solid rgba(16,185,129,0.3)' }}
+              className="flex-1 flex flex-col items-center justify-center py-4 rounded-xl transition-all active:scale-95 disabled:opacity-50 border"
+              style={{ backgroundColor: 'rgba(16,185,129,0.1)', color: '#10b981', borderColor: 'rgba(16,185,129,0.2)' }}
             >
-              {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
-              I resisted!
+              {isPending ? (
+                <Loader2 className="h-5 w-5 animate-spin mb-1" />
+              ) : (
+                <span className="text-xl font-black mb-1">✓</span>
+              )}
+              <span className="text-xs font-bold uppercase tracking-wide">RESISTED</span>
             </button>
             <button
               onClick={() => handleCheckIn(false)}
               disabled={isPending}
               aria-label="I gave in today"
-              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all active:scale-95 disabled:opacity-50"
-              style={{ backgroundColor: 'rgba(239,68,68,0.1)', color: 'var(--color-danger)', border: '1px solid rgba(239,68,68,0.25)' }}
+              className="flex-1 flex flex-col items-center justify-center py-4 rounded-xl transition-all active:scale-95 disabled:opacity-50 border"
+              style={{ backgroundColor: 'rgba(239,68,68,0.1)', color: '#ef4444', borderColor: 'rgba(239,68,68,0.2)' }}
             >
-              {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <XCircle className="h-4 w-4" />}
-              Gave in
+              {isPending ? (
+                <Loader2 className="h-5 w-5 animate-spin mb-1" />
+              ) : (
+                <span className="text-xl font-black mb-1">✕</span>
+              )}
+              <span className="text-xs font-bold uppercase tracking-wide">GAVE IN</span>
             </button>
           </div>
-          <p className="text-xs text-center text-[var(--color-text-muted)] mt-3">
-            No judgment — honest tracking helps you improve
+          <p className="text-[11px] uppercase tracking-widest text-center text-zinc-600 mt-4 font-semibold">
+            Honesty builds progress
           </p>
         </motion.div>
       ) : (
@@ -80,32 +88,24 @@ export function QuickCheckIn({ habit, todayLog, today }: QuickCheckInProps) {
           key="done"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass-card p-5 flex items-center gap-4"
-          style={{
-            borderColor: result ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.25)',
-          }}
+          className="glass-card p-6 flex items-center gap-5 border-zinc-800 bg-[#0a0a0a]"
         >
-          {result ? (
-            <>
-              <CheckCircle2 className="h-8 w-8 text-emerald-400 shrink-0" aria-hidden="true" />
-              <div>
-                <p className="font-semibold text-[var(--color-text-primary)]">Logged!</p>
-                <p className="text-xs text-[var(--color-text-secondary)]">
-                  You resisted today. Every win counts.
-                </p>
-              </div>
-            </>
-          ) : (
-            <>
-              <XCircle className="h-8 w-8 text-red-400 shrink-0" aria-hidden="true" />
-              <div>
-                <p className="font-semibold text-[var(--color-text-primary)]">Logged</p>
-                <p className="text-xs text-[var(--color-text-secondary)]">
-                  Tomorrow is a new start. You&apos;ve got this.
-                </p>
-              </div>
-            </>
-          )}
+          <div
+            className="w-12 h-12 rounded-full flex items-center justify-center text-2xl font-black border"
+            style={{
+              color: result ? '#10b981' : '#ef4444',
+              backgroundColor: result ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)',
+              borderColor: result ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)',
+            }}
+          >
+            {result ? '✓' : '✕'}
+          </div>
+          <div>
+            <p className="font-bold text-white text-lg tracking-tight mb-1">LOGGED</p>
+            <p className="text-sm text-zinc-400">
+              {result ? 'You resisted today. Excellent work.' : 'Tomorrow is a new day. Keep going.'}
+            </p>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
