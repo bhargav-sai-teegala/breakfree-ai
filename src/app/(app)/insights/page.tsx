@@ -27,7 +27,7 @@ export default async function InsightsPage() {
 
   const { data: habits } = await supabase
     .from('habits')
-    .select('id, name, category')
+    .select('*')
     .eq('user_id', user.id)
     .is('archived_at', null)
     .order('created_at', { ascending: false })
@@ -59,14 +59,14 @@ export default async function InsightsPage() {
   const [{ data: logs }, { data: milestones }] = await Promise.all([
     supabase
       .from('habit_logs')
-      .select('id, date, did_succeed, urge_level, triggers, mood')
+      .select('id, habit_id, user_id, date, did_succeed, urge_level, triggers, mood, note, logged_at')
       .eq('habit_id', primaryHabit.id)
       .eq('user_id', user.id)
       .order('date', { ascending: false })
       .limit(90),
     supabase
       .from('milestones')
-      .select('id, days, message, achieved_at')
+      .select('id, habit_id, user_id, days, message, achieved_at')
       .eq('user_id', user.id)
       .order('achieved_at', { ascending: false }),
   ])

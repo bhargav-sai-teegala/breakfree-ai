@@ -33,7 +33,7 @@ export default async function DashboardPage() {
   // Fetch active habits
   const { data: habits } = await supabase
     .from('habits')
-    .select('id, name, category, motivation, target_type, target_value, unit, created_at')
+    .select('*')
     .eq('user_id', user.id)
     .is('archived_at', null)
     .order('created_at', { ascending: false })
@@ -70,7 +70,7 @@ export default async function DashboardPage() {
   const [{ data: recentLogs }, { data: nudge }] = await Promise.all([
     supabase
       .from('habit_logs')
-      .select('id, date, did_succeed, urge_level, triggers, mood, note')
+      .select('id, habit_id, user_id, date, did_succeed, urge_level, triggers, mood, note, logged_at')
       .eq('habit_id', primaryHabit.id)
       .eq('user_id', user.id)
       .order('date', { ascending: false })

@@ -33,7 +33,7 @@ export async function GET(request: NextRequest): Promise<Response> {
     // Fetch active habits
     const query = supabase
       .from('habits')
-      .select('id, name, category, motivation, target_type, target_value, unit')
+      .select('*')
       .eq('user_id', user.id)
       .is('archived_at', null)
 
@@ -52,7 +52,7 @@ export async function GET(request: NextRequest): Promise<Response> {
       habits.map(async habit => {
         const { data: logs } = await supabase
           .from('habit_logs')
-          .select('id, date, did_succeed, urge_level, triggers, mood')
+          .select('id, habit_id, user_id, date, did_succeed, urge_level, triggers, mood, note, logged_at')
           .eq('habit_id', habit.id)
           .eq('user_id', user.id)
           .order('date', { ascending: false })
