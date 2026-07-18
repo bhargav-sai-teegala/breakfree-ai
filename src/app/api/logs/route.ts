@@ -88,7 +88,9 @@ export async function POST(request: NextRequest) {
                 buildMilestonePrompt(habit, milestoneDays, relapseCount),
               )
               if (aiMessage) message = aiMessage
-            } catch {}
+            } catch {
+              // silently fallback to default message
+            }
 
             const { data: milestone } = await supabase
               .from('milestones')

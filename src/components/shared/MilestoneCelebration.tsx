@@ -15,18 +15,20 @@ export function MilestoneCelebration({ days, message, onDismiss }: MilestoneCele
   const [particles, setParticles] = useState<Array<{ id: number; x: number; color: string; targetX: number; duration: number; delay: number }>>([])
 
   useEffect(() => {
-    const colors = ['#7c3aed', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899']
-    // eslint-disable-next-line
-    setParticles(
-      Array.from({ length: 20 }, (_, i) => ({
-        id: i,
-        x: Math.random() * 100,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        targetX: (Math.random() - 0.5) * 100,
-        duration: 2 + Math.random() * 2,
-        delay: Math.random() * 0.5,
-      })),
-    )
+    const t = setTimeout(() => {
+      const colors = ['#7c3aed', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899']
+      setParticles(
+        Array.from({ length: 20 }, (_, i) => ({
+          id: i,
+          x: Math.random() * 100,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          targetX: (Math.random() - 0.5) * 100,
+          duration: 2 + Math.random() * 2,
+          delay: Math.random() * 0.5,
+        }))
+      )
+    }, 0)
+    return () => clearTimeout(t)
   }, [])
 
   return (

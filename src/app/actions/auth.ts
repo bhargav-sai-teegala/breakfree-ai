@@ -4,6 +4,13 @@ import { createClient } from '@/lib/supabase/server'
 import { LoginSchema, RegisterSchema } from '@/validations/auth'
 import { redirect } from 'next/navigation'
 
+/**
+ * Server action to authenticate a user with email and password.
+ * 
+ * @param _prevState - Previous form state (required for useActionState).
+ * @param formData - The submitted form data containing email and password.
+ * @returns An object with success status and any validation/authentication errors.
+ */
 export async function loginAction(_prevState: unknown, formData: FormData) {
   const raw = {
     email: formData.get('email') as string,
@@ -38,6 +45,13 @@ export async function loginAction(_prevState: unknown, formData: FormData) {
   redirect('/dashboard')
 }
 
+/**
+ * Server action to register a new user.
+ * 
+ * @param _prevState - Previous form state (required for useActionState).
+ * @param formData - The submitted form data containing name, email, and password.
+ * @returns An object with success status and any validation/registration errors.
+ */
 export async function registerAction(_prevState: unknown, formData: FormData) {
   const raw = {
     name: formData.get('name') as string,
@@ -87,6 +101,10 @@ export async function registerAction(_prevState: unknown, formData: FormData) {
   redirect('/dashboard')
 }
 
+/**
+ * Server action to log out the current user and destroy their session.
+ * Redirects the user to the login page upon successful logout.
+ */
 export async function logoutAction() {
   const supabase = await createClient()
   await supabase.auth.signOut()

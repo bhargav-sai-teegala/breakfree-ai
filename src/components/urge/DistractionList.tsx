@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { Sparkles, RefreshCw } from 'lucide-react'
 import type { Habit } from '@/types'
@@ -25,8 +25,8 @@ export function DistractionList({ habit, triggers }: DistractionListProps) {
   const [loading, setLoading] = useState(true)
   const [fallbackIdx, setFallbackIdx] = useState(0)
 
-  async function fetchSuggestion() {
-    setLoading(true)
+  const fetchSuggestion = useCallback(async (isInitial = false) => {
+    if (!isInitial) setLoading(true)
     try {
       const res = await fetch('/api/ai/replacement', {
         method: 'POST',
@@ -46,13 +46,12 @@ export function DistractionList({ habit, triggers }: DistractionListProps) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [fallbackIdx, habit.category, habit.motivation, triggers])
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchSuggestion()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    const t = setTimeout(() => fetchSuggestion(true), 0)
+    return () => clearTimeout(t)
+  }, [fetchSuggestion])
 
   return (
     <div className="flex flex-col gap-4">
@@ -91,7 +90,7 @@ export function DistractionList({ habit, triggers }: DistractionListProps) {
       <Button
         variant="secondary"
         size="sm"
-        onClick={fetchSuggestion}
+        onClick={() => fetchSuggestion(false)}
         disabled={loading}
         aria-label="Get another suggestion"
         className="self-center"

@@ -88,7 +88,9 @@ export function ChatInterface({ initialMessages, habitId }: ChatInterfaceProps) 
                 accumulated += parsed.text
                 setStreamingContent(accumulated)
               }
-            } catch {}
+            } catch {
+              // Not JSON, fall back to raw text
+            }
           }
         }
       }

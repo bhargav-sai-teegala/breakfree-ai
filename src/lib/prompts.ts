@@ -1,5 +1,14 @@
 import type { Habit, HabitLog, HabitWithStats } from '@/types'
 
+/**
+ * Builds a prompt for generating a daily personalized nudge.
+ * 
+ * @param habit - The habit the user is trying to break.
+ * @param logs - Recent habit logs for context.
+ * @param streak - The user's current success streak.
+ * @param nudgeType - The category of nudge to generate (e.g., motivation, recovery).
+ * @returns A formatted prompt string for the AI.
+ */
 export function buildNudgePrompt(
   habit: Habit,
   logs: HabitLog[],
@@ -22,6 +31,14 @@ export function buildNudgePrompt(
 Write a ${nudgeType.replace(/_/g, ' ')} nudge for today. Be specific to their habit and current situation. Reference their WHY. Keep it under 80 words. No formatting, just text.`
 }
 
+/**
+ * Builds a prompt for generating immediate support during an urge.
+ * 
+ * @param habit - The habit the user is experiencing an urge for.
+ * @param triggers - Current triggers causing the urge.
+ * @param urgeLevel - Intensity of the urge on a scale of 1-5.
+ * @returns A formatted prompt string for the AI.
+ */
 export function buildUrgePrompt(habit: Habit, triggers: string[], urgeLevel: number): string {
   return `A user is experiencing an urge RIGHT NOW and needs immediate support.
 - Habit they're breaking: "${habit.name}" (${habit.category})
@@ -33,6 +50,16 @@ export function buildUrgePrompt(habit: Habit, triggers: string[], urgeLevel: num
 Provide immediate, compassionate support. Acknowledge what they're feeling first. Give ONE specific actionable thing to do in the next 60 seconds. Under 100 words. Conversational, warm, not clinical.`
 }
 
+/**
+ * Builds a prompt for generating a compassionate relapse recovery message.
+ * 
+ * @param habit - The habit the user relapsed on.
+ * @param triggers - Triggers that led to the relapse.
+ * @param previousStreak - How many days the user succeeded before the relapse.
+ * @param totalSuccess - Total successful days overall.
+ * @param totalDays - Total logged days overall.
+ * @returns A formatted prompt string for the AI.
+ */
 export function buildRelapsePrompt(
   habit: Habit,
   triggers: string[],
@@ -53,6 +80,12 @@ End with a forward-looking, hopeful statement about tomorrow.
 Under 150 words. Warm and human.`
 }
 
+/**
+ * Builds a prompt to generate insights based on a user's recent habit data.
+ * 
+ * @param habitsWithStats - Array of habits enriched with computed statistics.
+ * @returns A formatted prompt string instructing the AI to return a JSON insight object.
+ */
 export function buildInsightsPrompt(habitsWithStats: HabitWithStats[]): string {
   const habitData = habitsWithStats
     .map(
@@ -80,6 +113,14 @@ Return ONLY valid JSON (no markdown, no backticks):
 }`
 }
 
+/**
+ * Builds a prompt to generate a personalized milestone celebration message.
+ * 
+ * @param habit - The habit the milestone was achieved for.
+ * @param days - The number of streak days reached.
+ * @param relapseCount - Total number of relapses prior to reaching this milestone.
+ * @returns A formatted prompt string for the AI.
+ */
 export function buildMilestonePrompt(
   habit: Habit,
   days: number,
@@ -95,6 +136,13 @@ Make it feel genuinely earned, not generic.
 Under 100 words. Warm and celebratory.`
 }
 
+/**
+ * Builds a prompt to suggest a healthy replacement activity for a habit.
+ * 
+ * @param category - The general category of the habit (e.g., smoking, scrolling).
+ * @param motivation - The user's underlying motivation to quit.
+ * @returns A formatted prompt string for the AI.
+ */
 export function buildReplacementPrompt(category: string, motivation: string): string {
   return `A user wants to break their ${category.replace(/_/g, ' ')} habit.
 Their reason: "${motivation}"
@@ -110,6 +158,13 @@ Requirements:
 Return just one sentence describing the replacement activity.`
 }
 
+/**
+ * Builds a prompt for generating a comprehensive weekly review.
+ * 
+ * @param name - The user's name.
+ * @param weekData - Statistical data for the past week.
+ * @returns A formatted prompt string for the AI.
+ */
 export function buildWeeklyReviewPrompt(
   name: string,
   weekData: {

@@ -7,6 +7,13 @@ import { MILESTONE_DAYS } from '@/types'
 import { calculateStreak } from '@/lib/utils'
 import { redirect } from 'next/navigation'
 
+/**
+ * Server action to create a new habit for the current user.
+ * 
+ * @param _prevState - Previous form state.
+ * @param formData - Form data containing habit details (name, category, motivation, etc).
+ * @returns An object with success status and any validation errors.
+ */
 export async function createHabitAction(_prevState: unknown, formData: FormData) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -53,6 +60,14 @@ export async function createHabitAction(_prevState: unknown, formData: FormData)
   redirect('/habits')
 }
 
+/**
+ * Server action to update an existing habit's details.
+ * 
+ * @param habitId - The ID of the habit to update.
+ * @param _prevState - Previous form state.
+ * @param formData - Form data containing updated habit details.
+ * @returns An object with success status and any validation errors.
+ */
 export async function updateHabitAction(habitId: string, _prevState: unknown, formData: FormData) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -85,6 +100,11 @@ export async function updateHabitAction(habitId: string, _prevState: unknown, fo
   return { success: true }
 }
 
+/**
+ * Server action to archive a habit. Soft-deletes the habit so historical data is preserved.
+ * 
+ * @param habitId - The ID of the habit to archive.
+ */
 export async function archiveHabitAction(habitId: string) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -99,6 +119,14 @@ export async function archiveHabitAction(habitId: string) {
   redirect('/habits')
 }
 
+/**
+ * Server action to create or update a habit log (check-in) for a specific date.
+ * Automatically evaluates and grants milestones if a streak is reached.
+ * 
+ * @param _prevState - Previous form state.
+ * @param formData - Form data containing log details (habit_id, date, did_succeed, triggers, etc).
+ * @returns An object with success status, any errors, and the resulting log data.
+ */
 export async function createLogAction(_prevState: unknown, formData: FormData) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
