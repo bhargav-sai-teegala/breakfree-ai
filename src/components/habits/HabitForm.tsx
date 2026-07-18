@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { motion, AnimatePresence } from 'framer-motion'
 import { CreateHabitSchema, type CreateHabitInput } from '@/validations/habit'
@@ -27,10 +27,10 @@ export function HabitForm() {
 
   const {
     register,
-    watch,
     setValue,
     trigger,
     getValues,
+    control,
     formState: { errors },
   } = useForm<CreateHabitInput>({
     resolver: zodResolver(CreateHabitSchema),
@@ -39,8 +39,8 @@ export function HabitForm() {
     },
   })
 
-  const category = watch('category')
-  const targetType = watch('target_type')
+  const category = useWatch({ control, name: 'category' })
+  const targetType = useWatch({ control, name: 'target_type' })
 
   async function goNext() {
     const fields: (keyof CreateHabitInput)[] =

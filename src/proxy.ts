@@ -27,11 +27,13 @@ export async function proxy(request: NextRequest) {
   )
 
   // IMPORTANT: do not add logic between createServerClient and getUser()
-  const { data: { user }, error } = await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
 
   const path = request.nextUrl.pathname
   const isProtected = PROTECTED_PATHS.some(p => path === p || path.startsWith(p + '/'))
   const isAuthPath = AUTH_PATHS.some(p => path === p)
+
+  console.log(`[proxy] ${path} | user=${user?.id ?? 'null'} | isProtected=${isProtected} | isAuthPath=${isAuthPath}`)
 
   if (isProtected && !user) {
     const redirectUrl = request.nextUrl.clone()

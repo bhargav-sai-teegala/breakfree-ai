@@ -49,6 +49,7 @@ export function DistractionList({ habit, triggers }: DistractionListProps) {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchSuggestion()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

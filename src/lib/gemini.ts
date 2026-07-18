@@ -18,6 +18,12 @@ export const geminiModel = genAI.getGenerativeModel({
   systemInstruction: SYSTEM_INSTRUCTION,
 })
 
+/**
+ * Generates a single text response from the Gemini model based on a prompt.
+ * 
+ * @param {string} prompt - The input text prompt to send to the AI.
+ * @returns {Promise<string>} The generated text response, or an empty string if an error occurs.
+ */
 export async function generateText(prompt: string): Promise<string> {
   try {
     const result = await geminiModel.generateContent(prompt)
@@ -28,6 +34,13 @@ export async function generateText(prompt: string): Promise<string> {
   }
 }
 
+/**
+ * Generates a streaming text response from the Gemini model.
+ * Ideal for real-time conversational interfaces.
+ * 
+ * @param {Array<{ role: string; parts: Array<{ text: string }> }>} messages - The conversation history.
+ * @returns {Promise<any>} A stream of generated content chunks.
+ */
 export async function generateStream(
   messages: Array<{ role: string; parts: Array<{ text: string }> }>,
 ) {

@@ -2,8 +2,10 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { calculateStreak, getSuccessRate, getTopTriggers } from '@/lib/utils'
 import { StreakCalendar } from '@/components/insights/StreakCalendar'
-import { UrgeIntensityChart } from '@/components/insights/UrgeIntensityChart'
-import { TriggerBreakdown } from '@/components/insights/TriggerBreakdown'
+import dynamic from 'next/dynamic'
+
+const UrgeIntensityChart = dynamic(() => import('@/components/insights/UrgeIntensityChart').then(mod => mod.UrgeIntensityChart), { loading: () => <div className="h-48 flex items-center justify-center text-sm text-[var(--color-text-muted)]">Loading chart...</div> })
+const TriggerBreakdown = dynamic(() => import('@/components/insights/TriggerBreakdown').then(mod => mod.TriggerBreakdown), { loading: () => <div className="h-48 flex items-center justify-center text-sm text-[var(--color-text-muted)]">Loading chart...</div> })
 import { AiPatternSummary } from '@/components/insights/AiPatternSummary'
 import { MilestoneTimeline } from '@/components/insights/MilestoneTimeline'
 import { EmptyState } from '@/components/shared/EmptyState'
