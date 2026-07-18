@@ -59,7 +59,7 @@ export async function registerAction(_prevState: unknown, formData: FormData) {
   }
 
   const supabase = await createClient()
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email: parsed.data.email,
     password: parsed.data.password,
     options: {
@@ -71,6 +71,16 @@ export async function registerAction(_prevState: unknown, formData: FormData) {
     return {
       success: false,
       errors: { general: error.message || 'Could not create account' },
+    }
+  }
+
+  // If email confirmation is required, session will be null
+  if (!data.session) {
+    return {
+      success: false,
+      errors: {
+        general: 'Please check your email and click the confirmation link to complete sign up.',
+      },
     }
   }
 

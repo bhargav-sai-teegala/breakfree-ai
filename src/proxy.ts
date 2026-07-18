@@ -26,21 +26,36 @@ export async function proxy(request: NextRequest) {
     },
   )
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  // IMPORTANT: do not add logic between createServerClient and getUser()
+  const { data: { user }, error } = await supabase.auth.getUser()
 
   const path = request.nextUrl.pathname
-  const isProtected = PROTECTED_PATHS.some(p => path.startsWith(p))
+  const isProtected = PROTECTED_PATHS.some(p => path === p || path.startsWith(p + '/'))
   const isAuthPath = AUTH_PATHS.some(p => path === p)
 
   if (isProtected && !user) {
-    return NextResponse.redirect(new URL('/login', request.url))
-  }
-  if (isAuthPath && user) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+    const redirectUrl = request.nextUrl.clone()
+    redirectUrl.pathname = '/login'
+    const redirectResponse = NextResponse.redirect(redirectUrl)
+    // Copy refreshed session cookies onto the redirect so the login page has them
+    supabaseResponse.cookies.getAll().forEach(cookie => {
+      redirectResponse.cookies.set(cookie.name, cookie.value, cookie)
+    })
+    return redirectResponse
   }
 
+  if (isAuthPath && user) {
+    const redirectUrl = request.nextUrl.clone()
+    redirectUrl.pathname = '/dashboard'
+    const redirectResponse = NextResponse.redirect(redirectUrl)
+    // Copy refreshed session cookies onto the redirect so the dashboard has them
+    supabaseResponse.cookies.getAll().forEach(cookie => {
+      redirectResponse.cookies.set(cookie.name, cookie.value, cookie)
+    })
+    return redirectResponse
+  }
+
+  // IMPORTANT: return supabaseResponse so session cookies are forwarded
   return supabaseResponse
 }
 

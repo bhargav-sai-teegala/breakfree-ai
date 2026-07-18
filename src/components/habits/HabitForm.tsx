@@ -30,6 +30,7 @@ export function HabitForm() {
     watch,
     setValue,
     trigger,
+    getValues,
     formState: { errors },
   } = useForm<CreateHabitInput>({
     resolver: zodResolver(CreateHabitSchema),
@@ -52,7 +53,18 @@ export function HabitForm() {
     setStep(s => Math.max(0, s - 1) as Step)
   }
 
-  function handleSubmit(formData: FormData) {
+  // Build FormData from react-hook-form state — NOT from DOM,
+  // because AnimatePresence unmounts previous steps before submission.
+  function handleSubmit() {
+    const values = getValues()
+    const formData = new FormData()
+    formData.set('name', values.name ?? '')
+    formData.set('category', values.category ?? '')
+    formData.set('motivation', values.motivation ?? '')
+    formData.set('target_type', values.target_type ?? 'eliminate')
+    if (values.target_value != null) formData.set('target_value', String(values.target_value))
+    if (values.unit) formData.set('unit', values.unit)
+
     startTransition(async () => {
       const state = await createHabitAction(null, formData)
       if (state && !state.success) setActionState(state)
@@ -65,7 +77,7 @@ export function HabitForm() {
   ][]
 
   return (
-    <form action={handleSubmit} className="flex flex-col gap-6">
+    <form onSubmit={(e) => { e.preventDefault(); handleSubmit() }} className="flex flex-col gap-6">
       {/* Step indicator */}
       <div className="flex items-center gap-2" aria-label="Form progress">
         {STEPS.map((label, i) => (
@@ -147,8 +159,6 @@ export function HabitForm() {
                   {errors.category.message}
                 </p>
               )}
-              {/* Hidden input for form submission */}
-              <input type="hidden" {...register('category')} />
             </div>
 
             <Input
@@ -190,7 +200,6 @@ export function HabitForm() {
                     {type === 'eliminate' ? '🚫 Eliminate completely' : '📉 Reduce gradually'}
                   </button>
                 ))}
-                <input type="hidden" {...register('target_type')} />
               </div>
             </div>
 
