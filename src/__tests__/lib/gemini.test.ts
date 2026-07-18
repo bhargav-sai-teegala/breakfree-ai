@@ -54,7 +54,7 @@ describe('gemini.ts', () => {
     it('calls generateContentStream on the model', async () => {
       const stream = await generateStream([{ role: 'user', parts: [{ text: 'Hello stream' }] }])
       // Using a type assertion since the mock returns a specific structure
-      expect((stream as any).stream).toEqual(['Chunk 1', 'Chunk 2'])
+      expect((stream as { stream: string[] }).stream).toEqual(['Chunk 1', 'Chunk 2'])
     })
   })
 })
